@@ -19,7 +19,7 @@ from pytorch_transformers import (AdamW, OpenAIGPTDoubleHeadsModel, OpenAIGPTTok
 from torch.nn.parallel import DistributedDataParallel
 from torch.utils.data import DataLoader, TensorDataset
 
-from utils import get_dataset, make_logdir
+from web_chatbot.transfer_learning_conv_ai.utils import get_dataset, make_logdir
 
 SPECIAL_TOKENS = ["<bos>", "<eos>", "<speaker1>", "<speaker2>", "<pad>"]
 ATTR_TO_SPECIAL_TOKEN = {'bos_token': '<bos>', 'eos_token': '<eos>', 'pad_token': '<pad>',

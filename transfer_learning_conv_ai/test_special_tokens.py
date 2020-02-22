@@ -4,7 +4,7 @@ from pathlib import Path
 
 from pytorch_transformers import OpenAIGPTTokenizer, GPT2Tokenizer
 
-from train import ATTR_TO_SPECIAL_TOKEN, SPECIAL_TOKENS
+from web_chatbot.transfer_learning_conv_ai.train import ATTR_TO_SPECIAL_TOKEN, SPECIAL_TOKENS
 
 
 class TestSpecialTokenTreatment(unittest.TestCase):

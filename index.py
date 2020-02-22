@@ -4,7 +4,7 @@ import requests
 import json
 import pusher
 import sys
-# from transfer_learning_conv_ai import interact
+from web_chatbot.transfer_learning_conv_ai import interact
 
 app = Flask(__name__)
 
