@@ -12,10 +12,10 @@ from datetime import datetime
 import torch
 from pytorch_transformers import cached_path
 
-#PERSONACHAT_URL = "https://s3.amazonaws.com/datasets.huggingface.co/personachat/personachat_self_original.json"
-#HF_FINETUNED_MODEL = "https://s3.amazonaws.com/models.huggingface.co/transfer-learning-chatbot/gpt_personachat_cache.tar.gz"
-PERSONACHAT_URL ="./dataset/personachat_self_original.json"
-HF_FINETUNED_MODEL ="./dataset/gpt_personachat_cache.tar.gz"
+PERSONACHAT_URL = "./transfer_learning_conv_ai/dataset/personachat_self_original.json"
+HF_FINETUNED_MODEL = "./transfer_learning_conv_ai/dataset/gpt_personachat_cache.tar.gz"
+# PERSONACHAT_URL ="./dataset/personachat_self_original.json"
+# HF_FINETUNED_MODEL ="./dataset/gpt_personachat_cache.tar.gz"
 logger = logging.getLogger(__file__)
 
 def download_pretrained_model():

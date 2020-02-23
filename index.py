@@ -4,10 +4,11 @@ import requests
 import json
 import pusher
 import sys
-from web_chatbot.transfer_learning_conv_ai.interact import act
-from web_chatbot.transfer_learning_conv_ai.test22 import test22
+from web_chatbot.transfer_learning_conv_ai.interact import Chatbot
+# from web_chatbot.transfer_learning_conv_ai.test22 import test22
 
 app = Flask(__name__)
+chat_bot = Chatbot()
 
 @app.route('/')
 def index():
@@ -19,8 +20,9 @@ def send_message():
 #     print(type(message))
 #     print(test23(message)) >>correct
 #     print(act(message)) >>error
-    response_text = {"message": message}
+    res = chat_bot.chat(message)
+    response_text = {"message": res}
     return jsonify(response_text)
 
 if __name__=="__main__":
-    app.run()
+    app.run(use_reloader=False)
