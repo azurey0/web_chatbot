@@ -5,5 +5,6 @@
 /transfer_learning_conv_ai/dataset_cache_OpenAIGPTTokenizer
 
 # 忽略pycache
- __pycache__/
- .vscode/
+ /__pycache__/
+ /.vscode/
+ //transfer_learning_conv_ai/__pycache__/
