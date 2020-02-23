@@ -7,4 +7,4 @@
 # 忽略pycache
  /__pycache__/
  /.vscode/
- //transfer_learning_conv_ai/__pycache__/
+ /transfer_learning_conv_ai/__pycache__/
