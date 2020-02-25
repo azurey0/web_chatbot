@@ -25,4 +25,4 @@ def send_message():
     return jsonify(response_text)
 
 if __name__=="__main__":
-    app.run(use_reloader=False)
+    app.run(port=80)
