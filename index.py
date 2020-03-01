@@ -2,13 +2,12 @@ from flask import Flask,request,jsonify,render_template
 import os
 import requests
 import json
-import pusher
 import sys
-from web_chatbot.transfer_learning_conv_ai.interact import Chatbot
-# from web_chatbot.transfer_learning_conv_ai.test22 import test22
+# from web_chatbot.transfer_learning_conv_ai.interact import Chatbot
+from web_chatbot.information_retrieval.get_answer import IRbot
 
 app = Flask(__name__)
-chat_bot = Chatbot()
+# chat_bot = Chatbot()
 
 @app.route('/')
 def index():
@@ -17,10 +16,8 @@ def index():
 @app.route('/send_message', methods=['POST'])
 def send_message():
     message = request.form['message']
-#     print(type(message))
-#     print(test23(message)) >>correct
-#     print(act(message)) >>error
-    res = chat_bot.chat(message)
+    res = IRbot.chat(message)
+    # res = chat_bot.chat(message)
     response_text = {"message": res}
     return jsonify(response_text)
 
