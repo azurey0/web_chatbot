@@ -1,5 +1,5 @@
-import torch
-from pytorch_pretrained_bert import BertTokenizer, BertModel, BertForMaskedLM
+# import torch
+# from pytorch_pretrained_bert import BertTokenizer, BertModel, BertForMaskedLM
 #-*- coding : utf-8-*-
 # coding:unicode_escape
 import json
@@ -7,81 +7,81 @@ import json
 import logging
 logging.basicConfig(level=logging.INFO)
 import os
-data_dir = "C:\\Users\\Ran\\PycharmProjects\\web_chatbot\\information_retrieval\\dataset\\"
+data_dir = os.path.dirname(os.path.realpath(__file__))
 
-def get_sentence_embedding(sentence):
-    # Load pre-trained model tokenizer (vocabulary)
-    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-
-    marked_text = "[CLS] " + sentence + " [SEP]"
-    # Tokenize our sentence with the BERT tokenizer.
-    tokenized_text = tokenizer.tokenize(marked_text)
-
-    # Map the token strings to their vocabulary indeces.
-    indexed_tokens = tokenizer.convert_tokens_to_ids(tokenized_text)
-
-    # Mark each of the 22 tokens as belonging to sentence "1".
-    segments_ids = [1] * len(tokenized_text)
-
-    # Convert inputs to PyTorch tensors
-    tokens_tensor = torch.tensor([indexed_tokens])
-    segments_tensors = torch.tensor([segments_ids])
-
-    # Load pre-trained model (weights)
-    model = BertModel.from_pretrained('bert-base-uncased')
-
-    # Put the model in "evaluation" mode, meaning feed-forward operation.
-    model.eval()
-
-    # Predict hidden states features for each layer
-    with torch.no_grad():
-        encoded_layers, _ = model(tokens_tensor, segments_tensors)
-
-    # print ("Number of layers:", len(encoded_layers))
-    # layer_i = 0
-    # print ("Number of batches:", len(encoded_layers[layer_i]))
-    # batch_i = 0
-    # print ("Number of tokens:", len(encoded_layers[layer_i][batch_i]))
-    # token_i = 0
-    # print ("Number of hidden units:", len(encoded_layers[layer_i][batch_i][token_i]))
-
-    # Concatenate the tensors for all layers. We use `stack` here to. Could use different methods in later versions!
-    # create a new dimension in the tensor.
-    token_embeddings = torch.stack(encoded_layers, dim=0)
-    token_embeddings.size()
-
-    # Remove dimension 1, the "batches".
-    token_embeddings = torch.squeeze(token_embeddings, dim=1)
-    token_embeddings.size()
-    # Swap dimensions 0 and 1.
-    token_embeddings = token_embeddings.permute(1,0,2)
-    token_embeddings.size()
-
-    # Stores the token vectors, with shape [22 x 3,072]
-    token_vecs_cat = []
-    # `token_embeddings` is a [22 x 12 x 768] tensor.
-
-    # For each token in the sentence...
-    for token in token_embeddings:
-        # `token` is a [12 x 768] tensor
-
-        # Concatenate the vectors (that is, append them together) from the last
-        # four layers.
-        # Each layer vector is 768 values, so `cat_vec` is length 3,072.
-        cat_vec = torch.cat((token[-1], token[-2], token[-3], token[-4]), dim=0)
-
-        # Use `cat_vec` to represent `token`.
-        token_vecs_cat.append(cat_vec)
-
-    # `encoded_layers` has shape [12 x 1 x 22 x 768]
-    # `token_vecs` is a tensor with shape [22 x 768]
-    token_vecs = encoded_layers[11][0]
-
-    # Calculate the average of all token vectors.
-    sentence_embedding = torch.mean(token_vecs, dim=0)
-
-    print ("Our final sentence embedding vector of shape:", sentence_embedding.size())
-    return sentence_embedding
+# def get_sentence_embedding(sentence):
+#     # Load pre-trained model tokenizer (vocabulary)
+#     tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+#
+#     marked_text = "[CLS] " + sentence + " [SEP]"
+#     # Tokenize our sentence with the BERT tokenizer.
+#     tokenized_text = tokenizer.tokenize(marked_text)
+#
+#     # Map the token strings to their vocabulary indeces.
+#     indexed_tokens = tokenizer.convert_tokens_to_ids(tokenized_text)
+#
+#     # Mark each of the 22 tokens as belonging to sentence "1".
+#     segments_ids = [1] * len(tokenized_text)
+#
+#     # Convert inputs to PyTorch tensors
+#     tokens_tensor = torch.tensor([indexed_tokens])
+#     segments_tensors = torch.tensor([segments_ids])
+#
+#     # Load pre-trained model (weights)
+#     model = BertModel.from_pretrained('bert-base-uncased')
+#
+#     # Put the model in "evaluation" mode, meaning feed-forward operation.
+#     model.eval()
+#
+#     # Predict hidden states features for each layer
+#     with torch.no_grad():
+#         encoded_layers, _ = model(tokens_tensor, segments_tensors)
+#
+#     # print ("Number of layers:", len(encoded_layers))
+#     # layer_i = 0
+#     # print ("Number of batches:", len(encoded_layers[layer_i]))
+#     # batch_i = 0
+#     # print ("Number of tokens:", len(encoded_layers[layer_i][batch_i]))
+#     # token_i = 0
+#     # print ("Number of hidden units:", len(encoded_layers[layer_i][batch_i][token_i]))
+#
+#     # Concatenate the tensors for all layers. We use `stack` here to. Could use different methods in later versions!
+#     # create a new dimension in the tensor.
+#     token_embeddings = torch.stack(encoded_layers, dim=0)
+#     token_embeddings.size()
+#
+#     # Remove dimension 1, the "batches".
+#     token_embeddings = torch.squeeze(token_embeddings, dim=1)
+#     token_embeddings.size()
+#     # Swap dimensions 0 and 1.
+#     token_embeddings = token_embeddings.permute(1,0,2)
+#     token_embeddings.size()
+#
+#     # Stores the token vectors, with shape [22 x 3,072]
+#     token_vecs_cat = []
+#     # `token_embeddings` is a [22 x 12 x 768] tensor.
+#
+#     # For each token in the sentence...
+#     for token in token_embeddings:
+#         # `token` is a [12 x 768] tensor
+#
+#         # Concatenate the vectors (that is, append them together) from the last
+#         # four layers.
+#         # Each layer vector is 768 values, so `cat_vec` is length 3,072.
+#         cat_vec = torch.cat((token[-1], token[-2], token[-3], token[-4]), dim=0)
+#
+#         # Use `cat_vec` to represent `token`.
+#         token_vecs_cat.append(cat_vec)
+#
+#     # `encoded_layers` has shape [12 x 1 x 22 x 768]
+#     # `token_vecs` is a tensor with shape [22 x 768]
+#     token_vecs = encoded_layers[11][0]
+#
+#     # Calculate the average of all token vectors.
+#     sentence_embedding = torch.mean(token_vecs, dim=0)
+#
+#     print ("Our final sentence embedding vector of shape:", sentence_embedding.size())
+#     return sentence_embedding
 
 
 
@@ -152,6 +152,8 @@ def json_to_qa(json_dir, qa_dir):
     print('wrote to file: ',qa_dir)
 import numpy as np
 import pickle
+import sys
+
 def get_embeddings(qa_dir, embedding_dir):
     '''
     :param qa_dir: qa dataset path, got from json_to_qa
@@ -173,38 +175,33 @@ def get_embeddings(qa_dir, embedding_dir):
         data = json.load(f)
     q_lst = []
     a_lst = []
-    print('generating embeddings, please wait...')
     for i in range(len(data['qa'])):
         q_lst.append(data['qa'][i]['发送'])
         a_lst.append(data['qa'][i]['接收'])
+    print('generating embeddings...')
     q_vec = bc.encode(q_lst)
-    Q = np.reshape(q_vec, (len(q_lst), 25 * 768)) # to make matrix of 13*19200, where 13 stand for the num of sentence, 25*768 concat words embeddings belong to the sentence
-    question_tree = spatial.KDTree(Q)# has shape 13*19200
-    a_vec = bc.encode(a_lst)
-    A = np.reshape(a_vec, (len(a_lst), 25 * 768))
-    answer_tree = spatial.KDTree(A)
-    #example usage:
-    #pt = np.zeros(19200)
-    #question_tree.query(pt)
+    print('q_vec.shape: ', q_vec.shape)
+    np.save('/root/projects/web_chatbot/information_retrieval/dataset/q_embedding_matrix',q_vec)
+    print('wrote to file , q_embedding_matrix.pickle')
+
+
+def generate_tree(embeddings_dir):
+    embeddings = np.load(embeddings_dir)
+    from sklearn.neighbors import BallTree
+
+    print('constructing KDTree...')
+    question_tree = BallTree(embeddings)
     print('finish embed process! ')
-    pickle_out = open(os.path.join(data_dir,"chat_short_q.pickle"),"wb")
+    pickle_out = open('/root/projects/web_chatbot/information_retrieval/dataset/q_BallTree.pickle', "wb")
     pickle.dump(question_tree, pickle_out)
     pickle_out.close()
-    print('wrote to file ', os.path.join(data_dir,"chat_short_q.pickle"))
+    print('wrote to file , q_KDTree.pickle')
 
 if __name__ == "__main__":
-    # rng = np.random.RandomState(0)
-    # X = rng.random_sample((10, 3))
-    # print(np.shape(X))
-    # # get_embeddings('C:\\Users\\Ran\\PycharmProjects\\web_chatbot\\information_retrieval\\dataset\\chat_short_qa.json','C:\\Users\\Ran\\PycharmProjects\\web_chatbot\\information_retrieval\\dataset\\chat_embeddings.json')
-    # pickle_in = open("C:\\Users\\Ran\\PycharmProjects\\web_chatbot\\information_retrieval\\dataset\\chat_short_q.pickle","rb")
-    # qustion_embeddings = pickle.load(pickle_in)
-    # print(qustion_embeddings.data.shape)
 
-    filename = "chat_short.txt"
-    full_path = os.path.join(data_dir, filename)
-    print(full_path)
+    dir = '/root/projects/web_chatbot/information_retrieval/dataset/chat_qa.json'
 
+    generate_tree('/root/projects/web_chatbot/information_retrieval/dataset/q_embedding_matrix.npy')
 
 
 
